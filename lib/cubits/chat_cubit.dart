@@ -99,6 +99,6 @@ class Message {
 
   Message({required this.text, required this.isBuddy})
       : imageUrl = isBuddy
-            ? "https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/rabbit.jpg"
+            ? "https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/rab.png"
             : "https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/face.jpg";
 }

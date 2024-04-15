@@ -8,56 +8,65 @@ class AgeConfirmScreen extends StatelessWidget {
   const AgeConfirmScreen({
     super.key,
     required this.onYesNavigate,
-    required this.onNoNavigate, required this.onBack,
+    required this.onNoNavigate,
+    required this.onBack,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: onBack,
-                  ),
-                  const Spacer(),
-                ],
-              ),
-            ),
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'Are you over 18 years old?',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage('https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/on_2.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: onBack,
+                    ),
+                    const Spacer(),
+                  ],
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: onYesNavigate,
-                    child: const Text('Yes, I am'),
+              const Expanded(
+                child: Center(
+                  child: Text(
+                    'Are you over 18 years old?',
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16,),
-                  ElevatedButton(
-                    onPressed: onNoNavigate,
-                    child: const Text("No, I'm not"),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: onYesNavigate,
+                      child: const Text('Yes, I am'),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: onNoNavigate,
+                      child: const Text("No, I'm not"),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -116,7 +116,8 @@ class MyRouterDelegate extends RouterDelegate<String>
 
 class MyRouteInformationParser extends RouteInformationParser<String> {
   @override
-  Future<String> parseRouteInformation(RouteInformation routeInformation) async {
+  Future<String> parseRouteInformation(
+      RouteInformation routeInformation) async {
     return '/welcome';
   }
 }

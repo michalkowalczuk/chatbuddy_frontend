@@ -12,70 +12,78 @@ class NicknameSelectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: onBack,
-                  ),
-                  const Spacer(),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      "What's your nickname?",
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage('https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/on_3.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: onBack,
                     ),
-                  ),
-                  const SizedBox(height: 20), // Provides some spacing
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                    child: TextField(
-                      controller: textEditingController,
-                      decoration: const InputDecoration(
-                        labelText: 'Enter your nickname',
-                        border: OutlineInputBorder(),
+                    const Spacer(),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        "What's your nickname?",
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      "You can change it any time",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                      child: TextField(
+                        controller: textEditingController,
+                        decoration: const InputDecoration(
+                          labelText: 'Enter your nickname',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "You can change it any time",
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: ElevatedButton(
-                onPressed: () {
-                  String newName = textEditingController.text;
-                  if(newName.isEmpty) {
-                    newName = "client-0";
-                  }
-                  context.read<ChatCubit>().nameUpdate(newName);
-                  onNavigate();
-                },
-                child: const Text('Continue'),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: ElevatedButton(
+                  onPressed: () {
+                    String newName = textEditingController.text;
+                    if (newName.isEmpty) {
+                      newName = "client-0";
+                    }
+                    context.read<ChatCubit>().nameUpdate(newName);
+                    onNavigate();
+                  },
+                  child: const Text('Continue'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
