@@ -1,3 +1,4 @@
+import 'package:chat_buddy/cubits/buddy_cubit.dart';
 import 'package:chat_buddy/screens/age_confirm.dart';
 import 'package:chat_buddy/screens/avatar_select.dart';
 import 'package:chat_buddy/screens/buddy_select.dart';
@@ -22,8 +23,9 @@ class ChatBuddy extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        BlocProvider<BuddyCubit>(create: (_) => BuddyCubit()),
         BlocProvider<ChatCubit>(
-          create: (context) => ChatCubit(dio: Dio()),
+          create: (_) => ChatCubit(dio: Dio()),
         ),
       ],
       child: MaterialApp.router(
@@ -116,8 +118,7 @@ class MyRouterDelegate extends RouterDelegate<String>
 
 class MyRouteInformationParser extends RouteInformationParser<String> {
   @override
-  Future<String> parseRouteInformation(
-      RouteInformation routeInformation) async {
+  Future<String> parseRouteInformation(RouteInformation routeInformation) async {
     return '/welcome';
   }
 }

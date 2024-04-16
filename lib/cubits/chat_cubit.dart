@@ -6,20 +6,29 @@ import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import 'buddy_cubit.dart';
+
 class ChatCubit extends Cubit<List<Message>> {
   final Dio dio;
   late WebSocketChannel webSocketChannel;
 
   String clientId = "client-0";
-  final String buddyId = "buddy-0";
+  Buddy buddy = Buddy.empty();
 
   ChatCubit({required this.dio}) : super([]) {
     connect();
     fetchMessages();
   }
 
+  void buddyUpdate(Buddy buddy) {
+    this.buddy = buddy;
+    emit([]);
+    fetchMessages();
+  }
+
   void nameUpdate(String clientId) {
     this.clientId = clientId;
+    emit([]);
     fetchMessages();
   }
 
@@ -32,7 +41,7 @@ class ChatCubit extends Cubit<List<Message>> {
     webSocketChannel.sink.add(jsonEncode({
       "action": "client_message",
       "client_id": clientId,
-      "buddy_id": buddyId,
+      "buddy_id": buddy.buddyId,
       "client_message": message,
       "client_event": eventDescription,
       "client_date_time": _getFormattedDateTime()
@@ -40,13 +49,19 @@ class ChatCubit extends Cubit<List<Message>> {
   }
 
   void chatOpenEvent() {
-    String eventDescription = "User just opened the chat window; "
+    String eventDescription = "User opened the chat window; "
         "User sending this message is called $clientId";
     _sendWebSocketMessage("", eventDescription);
   }
 
   void sendMessage(String message, {String? event}) {
-    emit([Message(text: message, isBuddy: false), ...state]);
+    emit([
+      Message(
+          text: message,
+          isBuddy: false,
+          imageUrl: 'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/face.jpg'),
+      ...state
+    ]);
     String eventDescription = "User sending this message is called $clientId";
     _sendWebSocketMessage(message, eventDescription);
   }
@@ -74,8 +89,7 @@ class ChatCubit extends Cubit<List<Message>> {
   }
 
   void connectionUpdate() {
-    webSocketChannel.sink
-        .add(jsonEncode({"action": "client_message", "update_connection": true}));
+    webSocketChannel.sink.add(jsonEncode({"action": "client_message", "update_connection": true}));
   }
 
   void reconnect() {
@@ -88,7 +102,7 @@ class ChatCubit extends Cubit<List<Message>> {
         'https://5gvuwjhdfz5clkb7dgminpqyyu0hqtqn.lambda-url.us-west-1.on.aws/',
         data: {
           "client_id": clientId,
-          "buddy_id": buddyId,
+          "buddy_id": buddy.buddyId,
         },
       );
 
@@ -96,9 +110,11 @@ class ChatCubit extends Cubit<List<Message>> {
           .where((message) => message['text'] != null && message['text'].toString().isNotEmpty)
           .map((message) {
             return Message(
-              text: message['text'],
-              isBuddy: message['role'] == 'model',
-            );
+                text: message['text'],
+                isBuddy: message['role'] == 'model',
+                imageUrl: message['role'] == 'model'
+                    ? buddy.buddyImage
+                    : 'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/face.jpg');
           })
           .toList()
           .reversed
@@ -116,8 +132,5 @@ class Message {
   final bool isBuddy;
   final String imageUrl;
 
-  Message({required this.text, required this.isBuddy})
-      : imageUrl = isBuddy
-            ? "https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/rab.png"
-            : "https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/face.jpg";
+  Message({required this.text, required this.isBuddy, required this.imageUrl});
 }

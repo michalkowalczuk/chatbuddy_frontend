@@ -92,6 +92,16 @@ class ImagePreloader {
           const NetworkImage(
               'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/shiba_main.png'),
           context),
+
+      precacheImage(
+          const NetworkImage(
+              'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/inu.png'),
+          context),
+
+      precacheImage(
+          const NetworkImage(
+              'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/owl.png'),
+          context),
     ]);
   }
 }
