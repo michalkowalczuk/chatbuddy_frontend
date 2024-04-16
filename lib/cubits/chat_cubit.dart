@@ -49,6 +49,8 @@ class ChatCubit extends Cubit<List<Message>> {
   }
 
   void chatOpenEvent() {
+    // buddy thinking
+    emit([Message(text: "...", isBuddy: true, imageUrl: buddy.buddyImage), ...state]);
     String eventDescription = "User opened the chat window; "
         "User sending this message is called $clientId";
     _sendWebSocketMessage("", eventDescription);
@@ -119,6 +121,14 @@ class ChatCubit extends Cubit<List<Message>> {
           .toList()
           .reversed
           .toList();
+
+
+
+      // buddy thinking
+      List<dynamic> rowList = response.data['messages'] as List;
+      if(rowList.isNotEmpty && rowList.last['role'] == 'user') {
+        messages.insert(0, Message(text: "...", isBuddy: true, imageUrl: buddy.buddyImage));
+      }
 
       emit(messages);
     } catch (e) {
