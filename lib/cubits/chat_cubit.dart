@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class ChatCubit extends Cubit<List<Message>> {
@@ -22,15 +23,32 @@ class ChatCubit extends Cubit<List<Message>> {
     fetchMessages();
   }
 
-  void sendMessage(String message) {
-    emit([Message(text: message, isBuddy: false), ...state]);
+  String _getFormattedDateTime() {
+    DateTime now = DateTime.now();
+    return DateFormat('yyyy-MM-dd kk:mm:ss').format(now);
+  }
+
+  void _sendWebSocketMessage(String message, String eventDescription) {
     webSocketChannel.sink.add(jsonEncode({
       "action": "client_message",
       "client_id": clientId,
       "buddy_id": buddyId,
       "client_message": message,
-      "client_event": ""
+      "client_event": eventDescription,
+      "client_date_time": _getFormattedDateTime()
     }));
+  }
+
+  void chatOpenEvent() {
+    String eventDescription = "User just opened the chat window; "
+        "User sending this message is called $clientId";
+    _sendWebSocketMessage("", eventDescription);
+  }
+
+  void sendMessage(String message, {String? event}) {
+    emit([Message(text: message, isBuddy: false), ...state]);
+    String eventDescription = "User sending this message is called $clientId";
+    _sendWebSocketMessage(message, eventDescription);
   }
 
   void connect() {
@@ -57,7 +75,7 @@ class ChatCubit extends Cubit<List<Message>> {
 
   void connectionUpdate() {
     webSocketChannel.sink
-        .add(jsonEncode({"action": "client_message", "client_id": clientId, "buddy_id": buddyId}));
+        .add(jsonEncode({"action": "client_message", "update_connection": true}));
   }
 
   void reconnect() {
@@ -75,6 +93,7 @@ class ChatCubit extends Cubit<List<Message>> {
       );
 
       List<Message> messages = (response.data['messages'] as List)
+          .where((message) => message['text'] != null && message['text'].toString().isNotEmpty)
           .map((message) {
             return Message(
               text: message['text'],

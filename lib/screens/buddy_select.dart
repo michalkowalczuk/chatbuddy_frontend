@@ -1,4 +1,6 @@
+import 'package:chat_buddy/cubits/chat_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BuddySelectScreen extends StatelessWidget {
   final VoidCallback onNavigate;
@@ -60,7 +62,8 @@ class BuddySelectScreen extends StatelessWidget {
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: NetworkImage('https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/rab.png'),
+                                    image: NetworkImage(
+                                        'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/rab.png'),
                                   ),
                                 ),
                               ),
@@ -91,7 +94,10 @@ class BuddySelectScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: ElevatedButton(
-                  onPressed: onNavigate,
+                  onPressed: () {
+                    context.read<ChatCubit>().chatOpenEvent();
+                    onNavigate();
+                  },
                   child: const Text('Choose'),
                 ),
               ),
