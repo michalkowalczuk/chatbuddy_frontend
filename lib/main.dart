@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 import 'cubits/chat_cubit.dart';
+import 'cubits/client_cubit.dart';
 
 void main() {
   runApp(const ChatBuddy());
@@ -23,6 +24,7 @@ class ChatBuddy extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        BlocProvider<ClientCubit>(create: (_) => ClientCubit()),
         BlocProvider<BuddyCubit>(create: (_) => BuddyCubit()),
         BlocProvider<ChatCubit>(
           create: (_) => ChatCubit(dio: Dio()),

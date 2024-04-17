@@ -7,16 +7,26 @@ import 'package:intl/intl.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'buddy_cubit.dart';
+import 'client_cubit.dart';
 
 class ChatCubit extends Cubit<List<Message>> {
+  static const String webSocketsUrl = "wss://0bjou6wxe1.execute-api.us-west-1.amazonaws.com/main/";
+  static const String chatRetrieveUrl =
+      "https://5gvuwjhdfz5clkb7dgminpqyyu0hqtqn.lambda-url.us-west-1.on.aws";
+
   final Dio dio;
   late WebSocketChannel webSocketChannel;
 
-  String clientId = "client-0";
+  Client client = Client.empty();
   Buddy buddy = Buddy.empty();
 
   ChatCubit({required this.dio}) : super([]) {
     connect();
+    fetchMessages();
+  }
+
+  void clientUpdate(Client client) {
+    this.client = client;
     fetchMessages();
   }
 
@@ -26,22 +36,13 @@ class ChatCubit extends Cubit<List<Message>> {
     fetchMessages();
   }
 
-  void nameUpdate(String clientId) {
-    this.clientId = clientId;
-    emit([]);
-    fetchMessages();
-  }
-
-  String _getFormattedDateTime() {
-    DateTime now = DateTime.now();
-    return DateFormat('yyyy-MM-dd kk:mm:ss').format(now);
-  }
+  String _getFormattedDateTime() => DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now());
 
   void _sendWebSocketMessage(String message, String eventDescription) {
     webSocketChannel.sink.add(jsonEncode({
       "action": "client_message",
-      "client_id": clientId,
-      "buddy_id": buddy.buddyId,
+      "client_id": client.id,
+      "buddy_id": buddy.id,
       "client_message": message,
       "client_event": eventDescription,
       "client_date_time": _getFormattedDateTime()
@@ -49,36 +50,31 @@ class ChatCubit extends Cubit<List<Message>> {
   }
 
   void chatOpenEvent() {
-    // buddy thinking
-    emit([Message(text: "...", isBuddy: true, imageUrl: buddy.buddyImage), ...state]);
-    String eventDescription = "User opened the chat window; "
-        "User sending this message is called $clientId";
+    emit([Message(text: "...", isBuddy: true, imageUrl: buddy.imageUrl), ...state]);
+    final eventDescription =
+        "User opened the chat window; User sending this message is called ${client.name}";
     _sendWebSocketMessage("", eventDescription);
   }
 
   void sendMessage(String message, {String? event}) {
     emit([
       Message(
-          text: message,
-          isBuddy: false,
-          imageUrl: 'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/face.jpg'),
-      ...state
+        text: message,
+        isBuddy: false,
+        imageUrl: 'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/face.jpg',
+      ),
+      ...state,
     ]);
-    String eventDescription = "User sending this message is called $clientId";
+    final eventDescription = "User sending this message is called ${client.name}";
     _sendWebSocketMessage(message, eventDescription);
   }
 
   void connect() {
-    webSocketChannel = WebSocketChannel.connect(
-        Uri.parse("wss://0bjou6wxe1.execute-api.us-west-1.amazonaws.com/main/"));
-
+    webSocketChannel = WebSocketChannel.connect(Uri.parse(webSocketsUrl));
     connectionUpdate();
-
     webSocketChannel.stream.listen(
       (message) {
-        if (kDebugMode) {
-          print(message);
-        }
+        debugPrint(message);
         final decodedMessage = jsonDecode(message);
         if (decodedMessage['action'] == 'tickle') {
           fetchMessages();
@@ -94,45 +90,39 @@ class ChatCubit extends Cubit<List<Message>> {
     webSocketChannel.sink.add(jsonEncode({"action": "client_message", "update_connection": true}));
   }
 
-  void reconnect() {
-    Future.delayed(const Duration(seconds: 1), connect);
-  }
+  void reconnect() => Future.delayed(const Duration(seconds: 1), connect);
 
   Future<void> fetchMessages() async {
     try {
       final response = await dio.post(
-        'https://5gvuwjhdfz5clkb7dgminpqyyu0hqtqn.lambda-url.us-west-1.on.aws/',
+        chatRetrieveUrl,
         data: {
-          "client_id": clientId,
-          "buddy_id": buddy.buddyId,
+          "client_id": client.id,
+          "buddy_id": buddy.id,
         },
       );
 
-      List<Message> messages = (response.data['messages'] as List)
+      final messages = (response.data['messages'] as List)
           .where((message) => message['text'] != null && message['text'].toString().isNotEmpty)
-          .map((message) {
-            return Message(
-                text: message['text'],
-                isBuddy: message['role'] == 'model',
-                imageUrl: message['role'] == 'model'
-                    ? buddy.buddyImage
-                    : 'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/face.jpg');
-          })
+          .map(
+            (message) => Message(
+              text: message['text'],
+              isBuddy: message['role'] == 'model',
+              imageUrl: message['role'] == 'model' ? buddy.imageUrl : client.imageUrl,
+            ),
+          )
           .toList()
           .reversed
           .toList();
 
-
-
-      // buddy thinking
-      List<dynamic> rowList = response.data['messages'] as List;
-      if(rowList.isNotEmpty && rowList.last['role'] == 'user') {
-        messages.insert(0, Message(text: "...", isBuddy: true, imageUrl: buddy.buddyImage));
+      final rowList = response.data['messages'] as List;
+      if (rowList.isNotEmpty && rowList.last['role'] == 'user') {
+        messages.insert(0, Message(text: "...", isBuddy: true, imageUrl: buddy.imageUrl));
       }
 
       emit(messages);
     } catch (e) {
-      emit([]);
+      debugPrint("Error fetching messages $e");
     }
   }
 }

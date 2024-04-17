@@ -5,17 +5,8 @@ import '../cubits/chat_cubit.dart';
 
 class ChatScreen extends StatelessWidget {
   final VoidCallback onBack;
-  final TextEditingController textMessageCtrl = TextEditingController();
 
-  ChatScreen({super.key, required this.onBack});
-
-  void sendMessage(BuildContext context) {
-    if (textMessageCtrl.text.isNotEmpty) {
-      context.read<ChatCubit>().sendMessage(textMessageCtrl.text);
-      textMessageCtrl.clear();
-      FocusScope.of(context).unfocus();
-    }
-  }
+  const ChatScreen({super.key, required this.onBack});
 
   @override
   Widget build(BuildContext context) {
@@ -65,31 +56,7 @@ class ChatScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          onSubmitted: (_) => sendMessage(context),
-                          controller: textMessageCtrl,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white.withOpacity(0.8),
-                            hintText: "Type a message",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: () => sendMessage(context),
-                      ),
-                    ],
-                  ),
-                ),
+                const ChatInputField(),
               ],
             ),
           ],
@@ -134,6 +101,61 @@ class ChatBubble extends StatelessWidget {
         ),
         if (!isBuddy) CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
       ],
+    );
+  }
+}
+
+class ChatInputField extends StatefulWidget {
+  const ChatInputField({super.key});
+
+  @override
+  ChatInputFieldState createState() => ChatInputFieldState();
+}
+
+class ChatInputFieldState extends State<ChatInputField> {
+  final TextEditingController _textController = TextEditingController();
+
+  void sendMessage(BuildContext context) {
+    final text = _textController.text.trim();
+    if (text.isNotEmpty) {
+      context.read<ChatCubit>().sendMessage(text);
+      _textController.clear();
+      FocusScope.of(context).unfocus();
+    }
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _textController,
+              onSubmitted: (_) => sendMessage(context),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white.withOpacity(0.8),
+                hintText: "Type a message",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () => sendMessage(context),
+          ),
+        ],
+      ),
     );
   }
 }
