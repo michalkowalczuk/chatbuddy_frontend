@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../cubits/chat_cubit.dart';
 
@@ -16,32 +14,33 @@ class ChatScreen extends StatefulWidget {
 
 class ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
-  late final KeyboardVisibilityController _keyboardVisibilityController;
+  final FocusNode _textFocusNone = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _keyboardVisibilityController = KeyboardVisibilityController();
-    _keyboardVisibilityController.onChange.listen((bool visible) {
+    context.read<ChatCubit>().stream.listen((_) {
       _scrollToBottom();
     });
-
-    context.read<ChatCubit>().stream.listen((_) {
+    _textFocusNone.addListener(() {
       _scrollToBottom();
     });
   }
 
   @override
   void dispose() {
+    _textFocusNone.dispose();
     _scrollController.dispose();
     super.dispose();
   }
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-      }
+      Future.delayed(const Duration(milliseconds: 300), () { // Increase delay to ensure keyboard is fully visible
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        }
+      });
     });
   }
 
@@ -93,7 +92,7 @@ class ChatScreenState extends State<ChatScreen> {
                     },
                   ),
                 ),
-                const ChatInputField(),
+                ChatInputField(focusNode: _textFocusNone),
               ],
             ),
           ],
@@ -159,7 +158,9 @@ class ChatBubble extends StatelessWidget {
 }
 
 class ChatInputField extends StatefulWidget {
-  const ChatInputField({super.key});
+  final FocusNode focusNode;
+
+  const ChatInputField({super.key, required this.focusNode});
 
   @override
   ChatInputFieldState createState() => ChatInputFieldState();
@@ -205,6 +206,7 @@ class ChatInputFieldState extends State<ChatInputField> {
           Expanded(
             child: TextField(
               controller: _textController,
+              focusNode: widget.focusNode,
               onSubmitted: (_) => sendMessage(context),
               decoration: const InputDecoration(
                 hintText: "Talk about anything here...",
