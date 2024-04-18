@@ -1,82 +1,90 @@
+import 'package:chat_buddy/cubits/chat_cubit.dart';
+import 'package:chat_buddy/cubits/client_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../styles.dart';
 
 class AgeConfirmScreen extends StatelessWidget {
-  final VoidCallback onYesNavigate;
-  final VoidCallback onNoNavigate;
+  final VoidCallback onNavigate;
   final VoidCallback onBack;
 
   const AgeConfirmScreen({
     super.key,
-    required this.onYesNavigate,
-    required this.onNoNavigate,
+    required this.onNavigate,
     required this.onBack,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.network(
-            'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/on_2.png',
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+              'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/on_2.png',
+            ),
             fit: BoxFit.cover,
           ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: onBack,
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0).copyWith(bottom: 40),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: onBack,
+                    ),
+                    const Spacer(),
+                  ],
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'Are you over 18 years old?',
+                      style: TextStyle(
+                        color: OtherStyles.mainBlue,
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const Spacer(),
-                    ],
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  const Spacer(),
-                  Text(
-                    'Are you over 18 years old?',
+                ),
+                ElevatedButton(
+                  onPressed: onNavigate,
+                  style: ButtonStyles.elevatedFilled,
+                  child: const Text(
+                    'Yes, I am',
                     style: TextStyle(
-                      color: OtherStyles.mainBlue,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const Spacer(),
-                  ElevatedButton(
-                    onPressed: onYesNavigate,
-                    style: ButtonStyles.elevatedFilled,
-                    child: const Text(
-                      'Yes, I am',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                      ),
+                      fontSize: 16.0,
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: onNoNavigate,
-                    style: ButtonStyles.elevatedOutline,
-                    child: const Text(
-                      "No, I'm not",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                      ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<ClientCubit>().setUnder18().then((client) {
+                      context.read<ChatCubit>().clientUpdate(client);
+                      onNavigate();
+                    });
+                  },
+                  style: ButtonStyles.elevatedOutline,
+                  child: const Text(
+                    "No, I'm not",
+                    style: TextStyle(
+                      fontSize: 16.0,
                     ),
                   ),
-                  const SizedBox(height: 60),
-                ],
-              ),
+                )
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -145,7 +145,7 @@ class ChatBubble extends StatelessWidget {
               softLineBreak: true,
               styleSheet: MarkdownStyleSheet(
                 p: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
                   color: Colors.black,
                 ),
               ),

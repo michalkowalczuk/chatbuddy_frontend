@@ -1,6 +1,7 @@
 import 'package:chat_buddy/cubits/client_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WelcomeScreen extends StatelessWidget {
   final VoidCallback onNavigate;
@@ -11,7 +12,8 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: Future.wait([
-        ImagePreloader.preloadImages(context),
+        Preloader.preloadImages(context),
+        Preloader.preloadFonts(),
         context.read<ClientCubit>().init(),
       ]),
       builder: (context, snapshot) {
@@ -40,11 +42,11 @@ class WelcomeScreen extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const Text(
+                  Text(
                     'Welcome to \nchatBuddy',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24.0,
+                    style: GoogleFonts.museoModerno(
+                      fontSize: 50.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -64,7 +66,7 @@ class WelcomeScreen extends StatelessWidget {
   }
 }
 
-class ImagePreloader {
+class Preloader {
   static const _imageUrls = [
     'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/on_1.jpg',
     'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/on_2.png',
@@ -85,6 +87,15 @@ class ImagePreloader {
     'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f8.png',
     'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f9.png'
   ];
+
+  static Future<dynamic> preloadFonts() async {
+    return await GoogleFonts.pendingFonts([
+      GoogleFonts.mulishTextTheme(),
+      GoogleFonts.mulish(),
+      GoogleFonts.museoModernoTextTheme(),
+      GoogleFonts.museoModerno()
+    ]);
+  }
 
   static Future<void> preloadImages(BuildContext context) async {
     await Future.wait(

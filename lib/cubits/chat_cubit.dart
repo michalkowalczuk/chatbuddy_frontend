@@ -51,8 +51,9 @@ class ChatCubit extends Cubit<List<Message>> {
 
   void chatOpenEvent() {
     emit([...state, Message(text: "...", isBuddy: true, imageUrl: buddy.imageUrl)]);
+    final under18 = client.adult ? "" : "User is a minor under 18 years of age";
     final eventDescription =
-        "User opened the chat window; User sending this message is called ${client.name}";
+        "User opened the chat window; User sending this message is called ${client.name}; $under18";
     _sendWebSocketMessage("", eventDescription);
   }
 
@@ -65,7 +66,8 @@ class ChatCubit extends Cubit<List<Message>> {
         imageUrl: client.imageUrl,
       ),
     ]);
-    final eventDescription = "User sending this message is called ${client.name}";
+    final under18 = client.adult ? "" : "User is a minor under 18 years of age;";
+    final eventDescription = "$under18 User sending this message is called ${client.name}; $under18";
     _sendWebSocketMessage(message, eventDescription);
   }
 

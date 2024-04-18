@@ -78,8 +78,7 @@ class MyRouterDelegate extends RouterDelegate<String>
       '/age_confirm': MaterialPage(
         key: const ValueKey('AgeConfirmScreen'),
         child: AgeConfirmScreen(
-          onYesNavigate: () => _navigateTo('/avatar_select'),
-          onNoNavigate: () => _navigateTo('/welcome'),
+          onNavigate: () => _navigateTo('/avatar_select'),
           onBack: () => _navigateTo('/welcome'),
         ),
       ),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 class ButtonStyles {
   static ButtonStyle elevatedFilled = ElevatedButton.styleFrom(
+    textStyle: const TextStyle(
+      fontSize: 17
+    ),
     backgroundColor: OtherStyles.mainBlue,
     foregroundColor: Colors.white,
     shape: RoundedRectangleBorder(
@@ -14,6 +17,9 @@ class ButtonStyles {
   );
 
   static ButtonStyle elevatedOutline = ElevatedButton.styleFrom(
+    textStyle: const TextStyle(
+        fontSize: 17
+    ),
     foregroundColor: OtherStyles.mainBlue,
     backgroundColor: Colors.white,
     shape: RoundedRectangleBorder(
@@ -28,6 +34,6 @@ class ButtonStyles {
 }
 
 class OtherStyles {
-  static Color mainBlue = const Color.fromRGBO(75, 100, 134, 1);
+  static Color mainBlue = const Color.fromRGBO(35, 64, 88, 1);
   static Color bubbleBg = const Color.fromRGBO(230, 231, 233, 1);
 }

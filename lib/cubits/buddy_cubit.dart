@@ -6,19 +6,19 @@ class BuddyCubit extends Cubit<Buddy> {
       id: "inu",
       name: "Shiba Inu",
       imageUrl: "https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/inu.png",
-      description: "Friendly, loyal and energetic",
+      description: "Your sunny pal who's all about loyalty and fetch in the park",
     ),
     const Buddy(
       id: "owl",
       name: "Wise Owl",
       imageUrl: "https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/owl.png",
-      description: "Smart and mysterious",
+      description: "The brainy buddy who drops life wisdom while chilling with a good book",
     ),
     const Buddy(
       id: "rabbit",
       name: "Rabbit Grandma",
       imageUrl: "https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/rab.png",
-      description: "Kind and caring",
+      description: "The heartwarming, wise ol' friend with a knack for cozy chats over knitting",
     ),
   ];
 
