@@ -1,3 +1,4 @@
+import 'package:chat_buddy/cubits/chat_cubit.dart';
 import 'package:chat_buddy/cubits/client_cubit.dart';
 import 'package:chat_buddy/styles.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,18 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
                         GestureDetector(
-                          onTap: snapshot.data! ? navMain : navOnboarding,
+                          onTap: () {
+                            if (snapshot.data!) {
+                              // client loaded
+                              context
+                                  .read<ChatCubit>()
+                                  .clientUpdate(context.read<ClientCubit>().currentClient());
+                              navMain();
+                            } else {
+                              // client not loaded
+                              navOnboarding();
+                            }
+                          },
                           child: Container(
                             width: 80,
                             height: 80,
