@@ -41,7 +41,6 @@ class ChatScreen extends StatelessWidget {
                   child: BlocBuilder<ChatCubit, List<Message>>(
                     builder: (context, messages) {
                       return ListView.builder(
-                        reverse: true,
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                         itemCount: messages.length,
                         itemBuilder: (context, index) {
@@ -84,18 +83,34 @@ class ChatBubble extends StatelessWidget {
       mainAxisAlignment: isBuddy ? MainAxisAlignment.start : MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (isBuddy) CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
+        if (isBuddy)
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
+          ),
         Flexible(
           child: Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: isBuddy ? Colors.grey[300] : Colors.blue[300],
-              borderRadius: BorderRadius.circular(12),
+              color:
+                  isBuddy ? Colors.grey[200]?.withOpacity(0.8) : Colors.blue[600]?.withOpacity(0.8),
+              borderRadius: BorderRadius.only(
+                topLeft: isBuddy ? const Radius.circular(0) : const Radius.circular(16),
+                topRight: isBuddy ? const Radius.circular(16) : const Radius.circular(0),
+                bottomLeft: const Radius.circular(16),
+                bottomRight: const Radius.circular(16),
+              ),
             ),
             child: MarkdownBody(
               data: text,
               softLineBreak: true,
+              styleSheet: MarkdownStyleSheet(
+                p: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
             ),
           ),
         ),
@@ -132,26 +147,36 @@ class ChatInputFieldState extends State<ChatInputField> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.all(Radius.circular(32)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
       child: Row(
         children: [
           Expanded(
             child: TextField(
               controller: _textController,
               onSubmitted: (_) => sendMessage(context),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white.withOpacity(0.8),
-                hintText: "Type a message",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+              decoration: const InputDecoration(
+                hintText: "Talk about anything here...",
+                hintStyle: TextStyle(color: Colors.grey),
+                border: InputBorder.none,
               ),
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.send),
+            icon: Icon(Icons.send, color: Colors.blue[600]),
             onPressed: () => sendMessage(context),
           ),
         ],

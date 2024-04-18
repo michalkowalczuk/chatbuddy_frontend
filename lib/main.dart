@@ -7,14 +7,19 @@ import 'package:chat_buddy/screens/nickname_select.dart';
 import 'package:chat_buddy/screens/welcome.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'cubits/chat_cubit.dart';
 import 'cubits/client_cubit.dart';
 
 void main() {
-  runApp(const ChatBuddy());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
+    runApp(const ChatBuddy());
+  });
 }
 
 class ChatBuddy extends StatelessWidget {
@@ -31,6 +36,11 @@ class ChatBuddy extends StatelessWidget {
         ),
       ],
       child: MaterialApp.router(
+        theme: ThemeData(
+          textTheme: GoogleFonts.mulishTextTheme(
+            Theme.of(context).textTheme,
+          ),
+        ),
         title: 'ChatBuddy',
         routerDelegate: MyRouterDelegate(),
         routeInformationParser: MyRouteInformationParser(),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../styles.dart';
+
 class AgeConfirmScreen extends StatelessWidget {
   final VoidCallback onYesNavigate;
   final VoidCallback onNoNavigate;
@@ -38,9 +40,10 @@ class AgeConfirmScreen extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
-                  const Text(
+                  Text(
                     'Are you over 18 years old?',
                     style: TextStyle(
+                      color: OtherStyles.mainBlue,
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
                     ),
@@ -49,13 +52,26 @@ class AgeConfirmScreen extends StatelessWidget {
                   const Spacer(),
                   ElevatedButton(
                     onPressed: onYesNavigate,
-                    child: const Text('Yes, I am'),
+                    style: ButtonStyles.elevatedFilled,
+                    child: const Text(
+                      'Yes, I am',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: onNoNavigate,
-                    child: const Text("No, I'm not"),
+                    style: ButtonStyles.elevatedOutline,
+                    child: const Text(
+                      "No, I'm not",
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
+                  const SizedBox(height: 60),
                 ],
               ),
             ),

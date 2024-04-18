@@ -75,6 +75,15 @@ class ImagePreloader {
     'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/shiba_main.png',
     'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/inu.png',
     'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/owl.png',
+    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f1.png',
+    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f2.png',
+    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f3.png',
+    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f4.png',
+    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f5.png',
+    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f6.png',
+    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f7.png',
+    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f8.png',
+    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f9.png'
   ];
 
   static Future<void> preloadImages(BuildContext context) async {

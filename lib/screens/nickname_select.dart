@@ -1,4 +1,5 @@
 import 'package:chat_buddy/cubits/chat_cubit.dart';
+import 'package:chat_buddy/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,36 +56,65 @@ class NicknameSelectScreenState extends State<NicknameSelectScreen> {
                     ],
                   ),
                   const Spacer(),
-                  const Text(
-                    "What's your nickname?",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  Text(
+                    "What's your name?",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: OtherStyles.mainBlue,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
                   BlocBuilder<ClientCubit, Client>(
                     builder: (context, client) {
                       textEditingController.text = client.name;
                       textEditingController.selection = TextSelection.fromPosition(
                         TextPosition(offset: textEditingController.text.length),
                       );
-                      return TextField(
-                        controller: textEditingController,
-                        decoration: const InputDecoration(
-                          labelText: 'What is your name?',
-                          border: OutlineInputBorder(),
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(32),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
-                        textAlign: TextAlign.left,
+                        child: TextField(
+                          controller: textEditingController,
+                          style: TextStyle(color: OtherStyles.mainBlue),
+                          decoration: InputDecoration(
+                            hintText: 'Enter your name',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(32),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 24,
+                            ),
+                            filled: true,
+                            fillColor: OtherStyles.bubbleBg,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       );
                     },
                   ),
+                  const SizedBox(height: 12),
                   const Text(
                     "You can change it any time",
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                     textAlign: TextAlign.center,
                   ),
                   const Spacer(),
-                  const SizedBox(height: 20),
                   ElevatedButton(
+                    style: ButtonStyles.elevatedFilled,
                     onPressed: () {
                       final newName = textEditingController.text;
                       final chatCubit = context.read<ChatCubit>();
@@ -95,8 +125,11 @@ class NicknameSelectScreenState extends State<NicknameSelectScreen> {
                         widget.onNavigate();
                       });
                     },
-                    child: const Text('Continue'),
+                    child: const Text('Continue', style: TextStyle(fontSize: 16),),
                   ),
+                  const SizedBox(
+                    height: 60,
+                  )
                 ],
               ),
             ),

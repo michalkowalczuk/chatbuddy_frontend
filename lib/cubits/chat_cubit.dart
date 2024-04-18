@@ -50,7 +50,7 @@ class ChatCubit extends Cubit<List<Message>> {
   }
 
   void chatOpenEvent() {
-    emit([Message(text: "...", isBuddy: true, imageUrl: buddy.imageUrl), ...state]);
+    emit([...state, Message(text: "...", isBuddy: true, imageUrl: buddy.imageUrl)]);
     final eventDescription =
         "User opened the chat window; User sending this message is called ${client.name}";
     _sendWebSocketMessage("", eventDescription);
@@ -61,7 +61,7 @@ class ChatCubit extends Cubit<List<Message>> {
       Message(
         text: message,
         isBuddy: false,
-        imageUrl: 'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/face.jpg',
+        imageUrl: client.imageUrl,
       ),
       ...state,
     ]);
@@ -111,13 +111,11 @@ class ChatCubit extends Cubit<List<Message>> {
               imageUrl: message['role'] == 'model' ? buddy.imageUrl : client.imageUrl,
             ),
           )
-          .toList()
-          .reversed
           .toList();
 
       final rowList = response.data['messages'] as List;
       if (rowList.isNotEmpty && rowList.last['role'] == 'user') {
-        messages.insert(0, Message(text: "...", isBuddy: true, imageUrl: buddy.imageUrl));
+        messages.add(Message(text: "...", isBuddy: true, imageUrl: buddy.imageUrl));
       }
 
       emit(messages);

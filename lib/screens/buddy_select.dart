@@ -1,5 +1,6 @@
 import 'package:chat_buddy/cubits/buddy_cubit.dart';
 import 'package:chat_buddy/cubits/chat_cubit.dart';
+import 'package:chat_buddy/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,6 +25,7 @@ class BuddySelectScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Row(
                     children: [
@@ -38,13 +40,18 @@ class BuddySelectScreen extends StatelessWidget {
                   BlocBuilder<BuddyCubit, Buddy>(
                     builder: (context, buddy) {
                       return Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text(
-                            'Select a buddy to talk to',
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          Text(
+                            'Select a buddy to talk with',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: OtherStyles.mainBlue,
+                            ),
                             textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -75,16 +82,24 @@ class BuddySelectScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 16),
                           Text(
                             buddy.name,
-                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: OtherStyles.mainBlue),
                             textAlign: TextAlign.center,
                           ),
-                          Text(
-                            buddy.description,
-                            style: const TextStyle(fontSize: 18),
-                            textAlign: TextAlign.center,
+                          const SizedBox(height: 8,),
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 32),
+                            decoration: BoxDecoration(
+                              color: OtherStyles.bubbleBg,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(
+                              buddy.description,
+                              style: TextStyle(fontSize: 16, color: OtherStyles.mainBlue),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ],
                       );
@@ -92,6 +107,7 @@ class BuddySelectScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   ElevatedButton(
+                    style: ButtonStyles.elevatedFilled,
                     onPressed: () {
                       final currentBuddy = context.read<BuddyCubit>().currentBuddy();
                       context.read<ChatCubit>()
@@ -99,8 +115,9 @@ class BuddySelectScreen extends StatelessWidget {
                         ..chatOpenEvent();
                       onNavigate();
                     },
-                    child: const Text('Choose'),
+                    child: const Text('Choose', style: TextStyle(fontSize: 16),),
                   ),
+                  const SizedBox(height: 60,)
                 ],
               ),
             ),
