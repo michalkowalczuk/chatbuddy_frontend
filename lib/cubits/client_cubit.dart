@@ -19,7 +19,7 @@ class ClientCubit extends Cubit<Client> {
 
   Client currentClient() => state;
 
-  Future<void> init() async {
+  Future<bool> init() async {
     final prefs = await SharedPreferences.getInstance();
     final id = prefs.getString('client_id');
     final name = prefs.getString('client_name');
@@ -28,10 +28,12 @@ class ClientCubit extends Cubit<Client> {
 
     if (id != null && name != null && imageUrl != null && adult != null) {
       emit(Client(id: id, name: name, imageUrl: imageUrl, adult: adult));
+      return true;
     } else {
       final newClient = Client.empty();
       await _saveToPrefs(newClient);
       emit(newClient);
+      return false;
     }
   }
 
@@ -40,6 +42,7 @@ class ClientCubit extends Cubit<Client> {
     await prefs.setString('client_id', client.id);
     await prefs.setString('client_name', client.name);
     await prefs.setString('client_imageUrl', client.imageUrl);
+    await prefs.setBool('client_is_adult', client.adult);
   }
 
   Future<Client> setName(String newName) async {

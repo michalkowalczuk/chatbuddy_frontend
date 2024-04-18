@@ -4,18 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  final VoidCallback onNavigate;
+  final VoidCallback navOnboarding;
+  final VoidCallback navMain;
 
-  const WelcomeScreen({super.key, required this.onNavigate});
+  const WelcomeScreen({super.key, required this.navMain, required this.navOnboarding});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<bool>(
       future: Future.wait([
         Preloader.preloadImages(context),
         Preloader.preloadFonts(),
         context.read<ClientCubit>().init(),
-      ]),
+      ]).then((results) => results[2] as bool),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Scaffold(
@@ -43,7 +44,7 @@ class WelcomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'Welcome to \nchatBuddy',
+                    'Welcome to \nChatBuddy',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.museoModerno(
                       fontSize: 50.0,
@@ -53,7 +54,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: onNavigate,
+                    onPressed: snapshot.data! ? navMain : navOnboarding,
                     child: const Text('Begin'),
                   ),
                 ],
@@ -88,8 +89,8 @@ class Preloader {
     'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f9.png'
   ];
 
-  static Future<dynamic> preloadFonts() async {
-    return await GoogleFonts.pendingFonts([
+  static Future<void> preloadFonts() async {
+    await GoogleFonts.pendingFonts([
       GoogleFonts.mulishTextTheme(),
       GoogleFonts.mulish(),
       GoogleFonts.museoModernoTextTheme(),

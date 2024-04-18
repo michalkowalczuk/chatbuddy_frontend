@@ -49,11 +49,37 @@ class NicknameSelectScreenState extends State<NicknameSelectScreen> {
               children: <Widget>[
                 Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: widget.onBack,
+                    InkWell(
+                      onTap: widget.onBack,
+                      child: Container(
+                        padding: const EdgeInsets.all(8).copyWith(left: 0),
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: OtherStyles.mainBlue,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: 14,
+                          ),
+                        ),
+                      ),
                     ),
-                    const Spacer(),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: LinearProgressIndicator(
+                          value: 0.75,
+                          backgroundColor: Colors.grey[300],
+                          valueColor: AlwaysStoppedAnimation<Color>(OtherStyles.mainBlue),
+                          minHeight: 4,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 Expanded(

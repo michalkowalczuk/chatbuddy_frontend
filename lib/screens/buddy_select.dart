@@ -1,16 +1,18 @@
 import 'package:chat_buddy/cubits/buddy_cubit.dart';
 import 'package:chat_buddy/cubits/chat_cubit.dart';
+import 'package:chat_buddy/cubits/client_cubit.dart';
 import 'package:chat_buddy/styles.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BuddySelectScreen extends StatelessWidget {
+  final VoidCallback onEditUser;
   final VoidCallback onNavigate;
   final VoidCallback onBack;
 
-  const BuddySelectScreen({super.key, required this.onNavigate, required this.onBack});
+  const BuddySelectScreen(
+      {super.key, required this.onNavigate, required this.onBack, required this.onEditUser});
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +30,45 @@ class BuddySelectScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: onBack,
-                    ),
-                    const Spacer(),
-                  ],
-                ),
+                BlocBuilder<ClientCubit, Client>(builder: (context, client) {
+                  return Row(
+                    children: [
+                      const Spacer(),
+                      InkWell(
+                        onTap: onEditUser,
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0).copyWith(left: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(32),
+                            border: Border.all(
+                              color: OtherStyles.mainBlue,
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                client.name,
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: OtherStyles.mainBlue,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              CircleAvatar(
+                                radius: 14,
+                                backgroundImage: NetworkImage(
+                                  client.imageUrl,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
                 BlocBuilder<BuddyCubit, Buddy>(
                   builder: (context, buddy) {
                     return Expanded(

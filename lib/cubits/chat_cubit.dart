@@ -50,7 +50,7 @@ class ChatCubit extends Cubit<List<Message>> {
   }
 
   void chatOpenEvent() {
-    emit([...state, Message(text: "...", isBuddy: true, imageUrl: buddy.imageUrl)]);
+    emit([...state, Message(text: "🔵🔵🔵", isBuddy: true, imageUrl: buddy.imageUrl)]);
     final under18 = client.adult ? "" : "User is a minor under 18 years of age";
     final eventDescription =
         "User opened the chat window; User sending this message is called ${client.name}; $under18";
@@ -117,7 +117,7 @@ class ChatCubit extends Cubit<List<Message>> {
 
       final rowList = response.data['messages'] as List;
       if (rowList.isNotEmpty && rowList.last['role'] == 'user') {
-        messages.add(Message(text: "...", isBuddy: true, imageUrl: buddy.imageUrl));
+        messages.add(Message(text: "🔵🔵🔵", isBuddy: true, imageUrl: buddy.imageUrl));
       }
 
       emit(messages);

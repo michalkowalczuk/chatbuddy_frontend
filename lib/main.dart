@@ -55,9 +55,11 @@ class MyRouterDelegate extends RouterDelegate<String>
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   String _currentPath = '/welcome';
+  String _previousPath = '';
 
   void _navigateTo(String path) {
     if (_currentPath != path) {
+      _previousPath = _currentPath;
       _currentPath = path;
       notifyListeners();
     }
@@ -72,14 +74,17 @@ class MyRouterDelegate extends RouterDelegate<String>
       '/welcome': MaterialPage(
         key: const ValueKey('WelcomeScreen'),
         child: WelcomeScreen(
-          onNavigate: () => _navigateTo('/age_confirm'),
+          navOnboarding: () => _navigateTo('/age_confirm'),
+          navMain: () => _navigateTo('/buddy_select'),
         ),
       ),
       '/age_confirm': MaterialPage(
         key: const ValueKey('AgeConfirmScreen'),
         child: AgeConfirmScreen(
           onNavigate: () => _navigateTo('/avatar_select'),
-          onBack: () => _navigateTo('/welcome'),
+          onBack: () => _previousPath == '/buddy_select'
+              ? _navigateTo('/buddy_select')
+              : _navigateTo('/welcome'),
         ),
       ),
       '/avatar_select': MaterialPage(
@@ -99,6 +104,7 @@ class MyRouterDelegate extends RouterDelegate<String>
       '/buddy_select': MaterialPage(
         key: const ValueKey('BuddySelectScreen'),
         child: BuddySelectScreen(
+          onEditUser: () => _navigateTo('/age_confirm'),
           onNavigate: () => _navigateTo('/chat'),
           onBack: () => _navigateTo('/nickname_select'),
         ),
