@@ -58,12 +58,12 @@ class ChatCubit extends Cubit<List<Message>> {
 
   void sendMessage(String message, {String? event}) {
     emit([
+      ...state,
       Message(
         text: message,
         isBuddy: false,
         imageUrl: client.imageUrl,
       ),
-      ...state,
     ]);
     final eventDescription = "User sending this message is called ${client.name}";
     _sendWebSocketMessage(message, eventDescription);

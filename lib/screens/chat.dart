@@ -1,12 +1,49 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../cubits/chat_cubit.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   final VoidCallback onBack;
 
   const ChatScreen({super.key, required this.onBack});
+
+  @override
+  State<ChatScreen> createState() => ChatScreenState();
+}
+
+class ChatScreenState extends State<ChatScreen> {
+  final ScrollController _scrollController = ScrollController();
+  late final KeyboardVisibilityController _keyboardVisibilityController;
+
+  @override
+  void initState() {
+    super.initState();
+    _keyboardVisibilityController = KeyboardVisibilityController();
+    _keyboardVisibilityController.onChange.listen((bool visible) {
+      _scrollToBottom();
+    });
+
+    context.read<ChatCubit>().stream.listen((_) {
+      _scrollToBottom();
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +68,7 @@ class ChatScreen extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.arrow_back),
-                        onPressed: onBack,
+                        onPressed: widget.onBack,
                       ),
                       const Spacer(),
                     ],
@@ -41,6 +78,7 @@ class ChatScreen extends StatelessWidget {
                   child: BlocBuilder<ChatCubit, List<Message>>(
                     builder: (context, messages) {
                       return ListView.builder(
+                        controller: _scrollController,
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                         itemCount: messages.length,
                         itemBuilder: (context, index) {
@@ -86,7 +124,7 @@ class ChatBubble extends StatelessWidget {
         if (isBuddy)
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
+            child: CircleAvatar(radius: 24, backgroundImage: NetworkImage(imageUrl)),
           ),
         Flexible(
           child: Container(
@@ -107,7 +145,7 @@ class ChatBubble extends StatelessWidget {
               softLineBreak: true,
               styleSheet: MarkdownStyleSheet(
                 p: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.black,
                 ),
               ),
