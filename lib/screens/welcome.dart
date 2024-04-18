@@ -1,4 +1,5 @@
 import 'package:chat_buddy/cubits/client_cubit.dart';
+import 'package:chat_buddy/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,42 +25,73 @@ class WelcomeScreen extends StatelessWidget {
           );
         }
         return Scaffold(
-          body: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.network(
-                'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/on_1.jpg',
+          body: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(
+                    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/on_1.jpg'),
                 fit: BoxFit.cover,
               ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Image.network(
-                  'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/shiba_main.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Welcome to \nChatBuddy',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.museoModerno(
-                      fontSize: 50.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+            ),
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.all(40.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Welcome to',
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.museoModerno(
+                            fontSize: 32.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          'ChatBuddy',
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.museoModerno(
+                            fontSize: 56.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        GestureDetector(
+                          onTap: snapshot.data! ? navMain : navOnboarding,
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: OtherStyles.mainBlue,
+                            ),
+                            child: const Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: snapshot.data! ? navMain : navOnboarding,
-                    child: const Text('Begin'),
+                ),
+                Flexible(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Image.network(
+                      'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/shiba_main.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         );
       },

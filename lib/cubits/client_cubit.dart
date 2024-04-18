@@ -28,7 +28,7 @@ class ClientCubit extends Cubit<Client> {
 
     if (id != null && name != null && imageUrl != null && adult != null) {
       emit(Client(id: id, name: name, imageUrl: imageUrl, adult: adult));
-      return true;
+      return name.isNotEmpty;
     } else {
       final newClient = Client.empty();
       await _saveToPrefs(newClient);
@@ -51,7 +51,7 @@ class ClientCubit extends Cubit<Client> {
     emit(updatedClient);
     return updatedClient;
   }
-  
+
   Future<Client> setUnder18() async {
     final updatedClient = state.copyWith(adult: false);
     await _updateClientPrefsBool('client_is_adult', false);
@@ -110,7 +110,7 @@ class Client {
     const uuid = Uuid();
     return Client(
       id: uuid.v4(),
-      name: "Buddy User",
+      name: "",
       imageUrl: "https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f1.png",
       adult: true,
     );

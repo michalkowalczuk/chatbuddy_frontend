@@ -149,6 +149,10 @@ class NicknameSelectScreenState extends State<NicknameSelectScreen> {
                   style: ButtonStyles.elevatedFilled,
                   onPressed: () {
                     final newName = textEditingController.text;
+                    if (newName.isEmpty) {
+                      return;
+                    }
+
                     final chatCubit = context.read<ChatCubit>();
                     final clientCubit = context.read<ClientCubit>();
 
