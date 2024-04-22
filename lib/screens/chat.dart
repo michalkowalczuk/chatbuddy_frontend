@@ -97,7 +97,7 @@ class ChatScreenState extends State<ChatScreen> {
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
                         final message = messages[index];
-                        if(message.infoSpecial) {
+                        if(message.infoMessage) {
                           return Container(
                             alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
