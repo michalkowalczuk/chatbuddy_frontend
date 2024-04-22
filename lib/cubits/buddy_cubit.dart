@@ -20,6 +20,13 @@ class BuddyCubit extends Cubit<Buddy> {
       imageUrl: "https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/rab.png",
       description: "The heartwarming, wise ol' friend with a knack for cozy chats over knitting",
     ),
+    const Buddy(
+      id: "human",
+      name: "Human Therapist",
+      imageUrl: "https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/hooman.jpg",
+      description: "Talk to a human therapist (currently unavailable)",
+      available: false
+    ),
   ];
 
   BuddyCubit() : super(Buddy.empty()) {
@@ -52,12 +59,14 @@ class Buddy {
   final String name;
   final String imageUrl;
   final String description;
+  final bool available;
 
   const Buddy({
     required this.id,
     required this.name,
     required this.imageUrl,
     required this.description,
+    this.available = true
   });
 
   factory Buddy.empty() => const Buddy(

@@ -37,14 +37,10 @@ class BuddySelectScreen extends StatelessWidget {
                       InkWell(
                         onTap: onEditUser,
                         child: Container(
-                          padding: const EdgeInsets.all(8.0).copyWith(left: 16),
+                          padding: const EdgeInsets.all(4.0).copyWith(left: 16),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: OtherStyles.bubbleBg,
                             borderRadius: BorderRadius.circular(32),
-                            border: Border.all(
-                              color: OtherStyles.mainBlue,
-                              width: 1,
-                            ),
                           ),
                           child: Row(
                             children: [
@@ -58,6 +54,7 @@ class BuddySelectScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               CircleAvatar(
                                 radius: 14,
+                                backgroundColor: Colors.white,
                                 backgroundImage: NetworkImage(
                                   client.imageUrl,
                                 ),
@@ -151,20 +148,23 @@ class BuddySelectScreen extends StatelessWidget {
                     );
                   },
                 ),
-                ElevatedButton(
-                  style: ButtonStyles.elevatedFilled,
-                  onPressed: () {
-                    final currentBuddy = context.read<BuddyCubit>().currentBuddy();
-                    context.read<ChatCubit>()
-                      ..buddyUpdate(currentBuddy)
-                      ..chatOpenEvent();
-                    onNavigate();
-                  },
-                  child: const Text(
-                    'Choose',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
+                BlocBuilder<BuddyCubit, Buddy>(builder: (context, buddy) {
+                  return ElevatedButton(
+                    style: ButtonStyles.elevatedFilled,
+                    onPressed: buddy.available
+                        ? () {
+                            context.read<ChatCubit>()
+                              ..buddyUpdate(buddy)
+                              ..chatOpenEvent();
+                            onNavigate();
+                          }
+                        : null,
+                    child: const Text(
+                      'Choose',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  );
+                }),
               ],
             ),
           ),

@@ -97,11 +97,31 @@ class ChatScreenState extends State<ChatScreen> {
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
                         final message = messages[index];
-                        return ChatBubble(
-                          text: message.text,
-                          isBuddy: message.isBuddy,
-                          imageUrl: message.imageUrl,
-                        );
+                        if(message.infoSpecial) {
+                          return Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                            margin: const EdgeInsets.all(8).copyWith(left: 32, right: 32),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(
+                              message.text,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          );
+                        } else {
+                          return ChatBubble(
+                            text: message.text,
+                            isBuddy: message.isBuddy,
+                            imageUrl: message.imageUrl,
+                          );
+                        }
                       },
                     );
                   },
@@ -231,8 +251,8 @@ class ChatInputFieldState extends State<ChatInputField> {
             ),
           ),
           Container(
-            width: 32,
-            height: 32,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: OtherStyles.mainBlue,
               shape: BoxShape.circle,

@@ -40,7 +40,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(40.0),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
@@ -56,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
                           'ChatBuddy',
                           textAlign: TextAlign.left,
                           style: GoogleFonts.museoModerno(
-                            fontSize: 56.0,
+                            fontSize: 48.0,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -130,7 +130,8 @@ class Preloader {
     'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f6.png',
     'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f7.png',
     'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f8.png',
-    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f9.png'
+    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/f9.png',
+    'https://chatbuddy-public-img.s3.us-east-2.amazonaws.com/hooman.jpg'
   ];
 
   static Future<void> preloadFonts() async {
