@@ -5,9 +5,10 @@ import '../cubits/chat_cubit.dart';
 import '../styles.dart';
 
 class ChatScreen extends StatefulWidget {
+  final VoidCallback onNavigate;
   final VoidCallback onBack;
 
-  const ChatScreen({super.key, required this.onBack});
+  const ChatScreen({super.key, required this.onBack, required this.onNavigate});
 
   @override
   State<ChatScreen> createState() => ChatScreenState();
@@ -125,6 +126,33 @@ class ChatScreenState extends State<ChatScreen> {
                       },
                     );
                   },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    const Spacer(),
+                    InkWell(
+                      onTap: widget.onNavigate,
+                      child: Container(
+                        padding: const EdgeInsets.all(8).copyWith(left: 0),
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: OtherStyles.mainBlue,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.feedback_outlined,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               ChatInputField(focusNode: _textFocusNone),

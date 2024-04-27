@@ -1,6 +1,5 @@
 import 'package:chat_buddy/cubits/chat_cubit.dart';
 import 'package:chat_buddy/styles.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
