@@ -86,6 +86,28 @@ class ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                     const Spacer(),
+                    InkWell(
+                      onTap: widget.onNavigate,
+                      child: Container(
+                        padding: const EdgeInsets.all(4.0).copyWith(left: 16),
+                        decoration: BoxDecoration(
+                          color: OtherStyles.mainBlue,
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        child: const Row(
+                          children: [
+                            Text(
+                              "Feedback",
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -128,38 +150,25 @@ class ChatScreenState extends State<ChatScreen> {
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    const Spacer(),
-                    InkWell(
-                      onTap: widget.onNavigate,
-                      child: Container(
-                        padding: const EdgeInsets.all(8).copyWith(left: 0),
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: OtherStyles.mainBlue,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.feedback_outlined,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               ChatInputField(focusNode: _textFocusNone),
             ],
           ),
         ),
       ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   extendedPadding: const EdgeInsetsDirectional.only(start: 12.0, end: 12.0),
+      //   backgroundColor: OtherStyles.mainBlue,
+      //   tooltip: 'Give feedback',
+      //   onPressed: widget.onNavigate,
+      //   label: const Text('Feedback'),
+      //   foregroundColor: Colors.white,
+      //
+      //   // icon: const Icon(Icons.feedback, color: Colors.white, size: 25),
+      // ),
+      //
+      // floatingActionButtonLocation: CustomFloatingActionButtonLocation(
+      //   FloatingActionButtonLocation.miniEndTop, -1, 10
+      // ),
     );
   }
 }
@@ -295,5 +304,18 @@ class ChatInputFieldState extends State<ChatInputField> {
         ],
       ),
     );
+  }
+}
+
+class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
+  FloatingActionButtonLocation location;
+  double offsetX;    // X
+  double offsetY;    // Y
+  CustomFloatingActionButtonLocation(this.location, this.offsetX, this.offsetY);
+
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    Offset offset = location.getOffset(scaffoldGeometry);
+    return Offset(offset.dx + offsetX, offset.dy + offsetY);
   }
 }
