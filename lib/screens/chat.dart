@@ -5,9 +5,10 @@ import '../cubits/chat_cubit.dart';
 import '../styles.dart';
 
 class ChatScreen extends StatefulWidget {
+  final VoidCallback onNavigate;
   final VoidCallback onBack;
 
-  const ChatScreen({super.key, required this.onBack});
+  const ChatScreen({super.key, required this.onBack, required this.onNavigate});
 
   @override
   State<ChatScreen> createState() => ChatScreenState();
@@ -85,6 +86,28 @@ class ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                     const Spacer(),
+                    InkWell(
+                      onTap: widget.onNavigate,
+                      child: Container(
+                        padding: const EdgeInsets.all(4.0).copyWith(left: 16),
+                        decoration: BoxDecoration(
+                          color: OtherStyles.mainBlue,
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        child: const Row(
+                          children: [
+                            Text(
+                              "Feedback",
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -267,5 +290,18 @@ class ChatInputFieldState extends State<ChatInputField> {
         ],
       ),
     );
+  }
+}
+
+class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
+  FloatingActionButtonLocation location;
+  double offsetX;    // X
+  double offsetY;    // Y
+  CustomFloatingActionButtonLocation(this.location, this.offsetX, this.offsetY);
+
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    Offset offset = location.getOffset(scaffoldGeometry);
+    return Offset(offset.dx + offsetX, offset.dy + offsetY);
   }
 }

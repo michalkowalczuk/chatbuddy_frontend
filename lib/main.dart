@@ -5,6 +5,7 @@ import 'package:chat_buddy/screens/buddy_select.dart';
 import 'package:chat_buddy/screens/chat.dart';
 import 'package:chat_buddy/screens/nickname_select.dart';
 import 'package:chat_buddy/screens/welcome.dart';
+import 'package:chat_buddy/screens/feedback.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -112,7 +113,15 @@ class MyRouterDelegate extends RouterDelegate<String>
       '/chat': MaterialPage(
         key: const ValueKey('ChatScreen'),
         child: ChatScreen(
+          onNavigate: () => _navigateTo('/feedback'),
           onBack: () => _navigateTo('/buddy_select'),
+        ),
+      ),
+      '/feedback': MaterialPage(
+        key: const ValueKey('FeedbackScreen'),
+        child: FeedbackScreen(
+          onNavigate: () => _navigateTo('/chat'),
+          onBack: () => _navigateTo('/chat'),
         ),
       ),
     };
