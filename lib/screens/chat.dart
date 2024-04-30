@@ -155,20 +155,6 @@ class ChatScreenState extends State<ChatScreen> {
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   extendedPadding: const EdgeInsetsDirectional.only(start: 12.0, end: 12.0),
-      //   backgroundColor: OtherStyles.mainBlue,
-      //   tooltip: 'Give feedback',
-      //   onPressed: widget.onNavigate,
-      //   label: const Text('Feedback'),
-      //   foregroundColor: Colors.white,
-      //
-      //   // icon: const Icon(Icons.feedback, color: Colors.white, size: 25),
-      // ),
-      //
-      // floatingActionButtonLocation: CustomFloatingActionButtonLocation(
-      //   FloatingActionButtonLocation.miniEndTop, -1, 10
-      // ),
     );
   }
 }
